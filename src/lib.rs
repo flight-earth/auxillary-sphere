@@ -1,3 +1,19 @@
+pub mod units {
+  use std::fmt;
+
+  pub struct DMS {
+    pub deg : i32,
+    pub min : i32,
+    pub sec : f64,
+  }
+
+  impl fmt::Display for DMS {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+      write!(f, "{}°{}'{}\"", self.deg, self.min, self.sec)
+    }
+  }
+}
+
 pub mod geodesy {
   use std::fmt;
 
