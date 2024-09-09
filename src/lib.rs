@@ -10,15 +10,19 @@ pub mod units {
     pub sec : f64,
   }
 
+  // SEE: https://www.wezm.net/v2/posts/2023/divmod/
+  fn div_mod(n: f64, d: i32) -> (i32, f64) {
+    let q = (n / d as f64).floor();
+    (q as i32, (n - (q * d as f64)))
+  }
+
   impl DMS {
     pub fn from_deg(Deg(deg): Deg) -> DMS {
       let d_abs = deg.abs();
       let dd = d_abs.floor() as i32;
       let d_frac = d_abs - (dd as f64);
-      let m_frac = d_frac * 60.0;
-      let min = m_frac.floor() as i32;
-      let secs = (m_frac - min as f64) * 60.0;
-      DMS { deg: {if deg < 0.0 {-dd} else {dd}}, min: min, sec: secs }
+      let (mm, m_frac) = div_mod(d_frac * 60.0, 1);
+      DMS { deg: {if deg < 0.0 {-dd} else {dd}}, min: mm, sec: m_frac * 60.0 }
     }
   }
 
