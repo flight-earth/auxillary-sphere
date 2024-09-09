@@ -12,6 +12,17 @@ pub mod units {
       write!(f, "{}°{}'{}\"", self.deg, self.min, self.sec)
     }
   }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn check_show() {
+      let dms = DMS { deg: 90, min: 12, sec: 0.999 };
+      assert_eq!(format!("{}", dms), "90°12'0.999\"");
+    }
+  }
 }
 
 pub mod geodesy {
