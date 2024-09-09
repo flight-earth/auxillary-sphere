@@ -1,7 +1,7 @@
 pub mod units {
   use std::fmt;
 
-  pub struct Deg(f64);
+  pub struct Deg(pub f64);
 
   #[derive(Debug, PartialEq)]
   pub struct DMS {
@@ -17,6 +17,14 @@ pub mod units {
   }
 
   impl DMS {
+    /// Convert from degrees to DMS
+    ///
+    /// ```
+    /// # use auxillary_sphere::units::*;
+    /// assert_eq!(format!("{}",
+    ///   DMS::from_deg(Deg(-169.06666666622118))),
+    ///   "-169°3'59.99999839625161\"");
+    /// ```
     pub fn from_deg(Deg(deg): Deg) -> DMS {
       let d_abs = deg.abs();
       let dd = d_abs.floor() as i32;
