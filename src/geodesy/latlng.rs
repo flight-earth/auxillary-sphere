@@ -2,6 +2,7 @@ use crate::units::convert::*;
 use crate::units::{Deg, Rad};
 use std::fmt;
 
+#[derive(Debug)]
 pub struct LatLng {
     pub lat: Rad,
     pub lng: Rad,

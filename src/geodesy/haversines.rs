@@ -64,7 +64,7 @@ fn direct(prob: DirectProblem) -> DirectSolution{
     DirectSolution{y : LatLng{lat : Rad(lat2), lng : Rad(lng2)}, az2 : az2}
 }
 
-fn inverse(InverseProblem{x, y}: &InverseProblem) -> InverseSolution {
+pub fn inverse(InverseProblem{x, y}: &InverseProblem) -> InverseSolution {
     let az1 = azimuth_fwd(x, y).map(|az| Az{az : az.0}).unwrap();
     let az2 = azimuth_rev(x, y).map(|az| Az{az : az.0});
     let s = distance(x, y);
