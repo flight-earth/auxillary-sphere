@@ -1,31 +1,31 @@
 use crate::geodesy::latlng::LatLng;
 
-struct Az {
-    az: f64,
+pub struct Az {
+    pub az: f64,
 }
 
-struct Dist {
-    dist: f64,
+pub struct Dist {
+    pub dist: f64,
 }
 
-struct DirectProblem {
-    x: LatLng,
-    az1: Az,
-    s: Dist,
+pub struct DirectProblem {
+    pub x: LatLng,
+    pub az1: Az,
+    pub s: Dist,
 }
 
-struct InverseProblem {
-    x: LatLng,
-    y: LatLng,
+pub struct InverseProblem {
+    pub x: LatLng,
+    pub y: LatLng,
 }
 
-struct DirectSolution {
-    y: LatLng,
-    az2: Option<Az>,
+pub struct DirectSolution {
+    pub y: LatLng,
+    pub az2: Option<Az>,
 }
 
-struct InverseSolution {
-    s: Dist,
-    az1: Az,
-    az2: Option<Az>,
+pub struct InverseSolution {
+    pub s: Dist,
+    pub az1: Az,
+    pub az2: Option<Az>,
 }
