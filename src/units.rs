@@ -54,6 +54,54 @@ pub mod convert {
     pub fn rad_to_deg(Rad(rad): Rad) -> Deg {
         Deg(rad.to_degrees())
     }
+
+    pub fn ord_to_float(ord: std::cmp::Ordering) -> f64 {
+        match ord {
+            std::cmp::Ordering::Equal => 0.0,
+            std::cmp::Ordering::Less => -1.0,
+            std::cmp::Ordering::Greater => 1.0,
+        }
+    }
+
+    pub fn is_even(x: u64) -> bool {
+        x % 2 == 0
+    }
+
+    pub fn plus_minus_pi(deg_plus_minus: Deg) -> Deg {
+        if deg_plus_minus.0.is_nan() {
+            deg_plus_minus
+        } else {
+            let deg = deg_plus_minus.0.abs();
+            let n = (deg / 180.0).floor();
+            let d = deg - n * 180.0;
+            let m = ord_to_float(deg_plus_minus.0.partial_cmp(&0.0).unwrap_or(std::cmp::Ordering::Equal));
+
+            if d == 0.0 {
+                if is_even(n.abs() as u64) {
+                    Deg(0.0)
+                } else {
+                    Deg(m * 180.0)
+                }
+            } else {
+                Deg((m * d) + if is_even(n.abs() as u64) {
+                    0.0
+                } else if deg_plus_minus.0 >= 0.0 {
+                    -180.0
+                } else {
+                    180.0
+                })
+            }
+        }
+    }
+
+    pub fn is_plus_minus_half_pi(deg: Deg) -> Option<Deg> {
+        let deg = plus_minus_pi(deg);
+        if deg.0 < -90.0 || deg.0 > 90.0 {
+            None
+        } else {
+            Some(deg)
+        }
+    }
 }
 
 #[derive(Debug, PartialEq)]
