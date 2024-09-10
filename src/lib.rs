@@ -11,5 +11,8 @@ pub mod geodesy {
     pub mod vincenty;
     pub mod latlng;
     pub mod problems;
+    pub mod published {
+        pub mod vincenty1975;
+    }
 }
 pub mod units;

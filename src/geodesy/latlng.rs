@@ -1,4 +1,4 @@
-use crate::units::convert::*;
+use crate::units::{convert::*, DMS};
 use crate::units::{Deg, Rad};
 use std::fmt;
 
@@ -13,6 +13,15 @@ impl LatLng {
         LatLng {
             lat: deg_to_rad(Deg(lat)),
             lng: deg_to_rad(Deg(lng)),
+        }
+    }
+}
+
+impl From<(DMS, DMS)> for LatLng {
+    fn from((lat, lng): (DMS, DMS)) -> Self {
+        LatLng {
+            lat: deg_to_rad(lat.to_deg()),
+            lng: deg_to_rad(lng.to_deg()),
         }
     }
 }

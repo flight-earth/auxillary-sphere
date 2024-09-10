@@ -1,5 +1,6 @@
 use crate::units::*;
 
+#[derive(Copy, Clone)]
 pub struct Ellipsoid {
     pub equatorial_r: Radius,
     pub recip_f: f64,

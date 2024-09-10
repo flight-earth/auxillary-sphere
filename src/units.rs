@@ -112,7 +112,7 @@ pub mod convert {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub struct DMS {
     pub deg: i32,
     pub min: i32,
