@@ -35,7 +35,12 @@ pub mod units {
       let dd = d_abs.floor() as i32;
       let d_frac = d_abs - (dd as f64);
       let (mm, m_frac) = div_mod(d_frac * 60.0, 1);
-      DMS { deg: {if deg < 0.0 {-dd} else {dd}}, min: mm, sec: m_frac * 60.0 }
+      match (deg < 0.0, (dd, mm, m_frac * 60.0)) {
+        (false, (_, _, ss)) => DMS { deg: dd, min: mm, sec: ss },
+        (true, (0, 0, ss)) => DMS { deg: 0, min: 0, sec: -ss },
+        (true, (0, _, ss)) => DMS { deg: 0, min: -mm, sec: ss },
+        (true, (_, _, ss)) => DMS { deg: -dd, min: mm, sec: ss },
+      }
     }
 
     pub fn to_deg(&self) -> Deg {
@@ -48,14 +53,37 @@ pub mod units {
   ///
   /// ```
   /// # use auxillary_sphere::units::*;
-  /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: -1, sec: 0.0 }.normalize()),
-  ///  "359°59'0\"");
-  /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: 0, sec: 61.0 }.normalize()),
-  ///  "0°1'1\"");
-  /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: 61, sec: 0.0 }.normalize()),
-  ///  "1°0'60\"");
-  /// assert_eq!(format!("{:.0}", DMS { deg: 1, min: 0, sec: 60.0 }.normalize()),
-  ///  "1°0'60\"");
+  /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: -1, sec: 0.0 }.normalize()), "359°59'0\"");
+  /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: 0, sec: 61.0 }.normalize()), "0°1'1\"");
+  /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: 61, sec: 0.0 }.normalize()), "1°0'60\"");
+  /// assert_eq!(format!("{:.0}", DMS { deg: 1, min: 0, sec: 60.0 }.normalize()), "1°0'60\"");
+  /// ```
+  /// 
+  /// Positive normalized.
+  /// ```
+  /// # use auxillary_sphere::units::*;
+  /// assert_eq!(format!("{:.0}, {0:?}", DMS::from_deg(Deg(1.0/60.0)).normalize()),
+  ///  "0°1'0\", DMS { deg: 0, min: 1, sec: 0.0 }");
+  /// assert_eq!(format!("{:.0}, {0:?}", DMS::from_deg(Deg(1.0/3600.0)).normalize()),
+  ///  "0°0'1\", DMS { deg: 0, min: 0, sec: 1.0 }");
+  /// ```
+  ///
+  /// Negative not normalized.
+  /// ```
+  /// # use auxillary_sphere::units::*;
+  /// assert_eq!(format!("{:.0}, {0:?}", DMS::from_deg(Deg(-1.0/60.0))),
+  ///  "-0°1'0\", DMS { deg: 0, min: -1, sec: 0.0 }");
+  /// assert_eq!(format!("{:.0}, {0:?}", DMS::from_deg(Deg(-1.0/3600.0))),
+  ///  "-0°0'1\", DMS { deg: 0, min: 0, sec: -1.0 }");
+  /// ```
+  ///
+  /// Negative normalized.
+  /// ```
+  /// # use auxillary_sphere::units::*;
+  /// assert_eq!(format!("{:.0}", DMS::from_deg(Deg(-1.0/60.0).normalize())), "359°59'0\"");
+  /// assert_eq!(format!("{:.0}", DMS::from_deg(Deg(-1.0/60.0)).normalize()), "359°59'0\"");
+  /// assert_eq!(format!("{:.0}", DMS::from_deg(Deg(-1.0/3600.0).normalize())), "359°59'59\"");
+  /// assert_eq!(format!("{:.0}", DMS::from_deg(Deg(-1.0/3600.0)).normalize()), "359°59'59\"");
   /// ```
   impl Normalize for DMS {
     fn normalize(&self) -> DMS {
@@ -67,10 +95,19 @@ pub mod units {
   ///
   /// ```
   /// # use auxillary_sphere::units::*;
-  /// assert_eq!(format!("{:?}", Deg(0.0).normalize()), "Deg(0.0)");
-  /// assert_eq!(format!("{:?}", Deg(359.0).normalize()), "Deg(359.0)");
-  /// assert_eq!(format!("{:?}", Deg(361.0).normalize()), "Deg(1.0)");
-  /// assert_eq!(format!("{:?}", Deg(-1.0).normalize()), "Deg(359.0)");
+  /// assert_eq!(format!("{:.0}", Deg(0.0).normalize()), "0°");
+  /// assert_eq!(format!("{:.0}", Deg(1.0).normalize()), "1°");
+  /// assert_eq!(format!("{:.0}", Deg(-1.0).normalize()), "359°");
+  /// assert_eq!(format!("{:.0}", Deg(359.0).normalize()), "359°");
+  /// assert_eq!(format!("{:.0}", Deg(361.0).normalize()), "1°");
+  /// assert_eq!(format!("{:.0}, {0:?}", DMS::from_deg(Deg(1.0)).normalize()),
+  ///  "1°0'0\", DMS { deg: 1, min: 0, sec: 0.0 }");
+  /// ```
+  ///
+  /// ```
+  /// # use auxillary_sphere::units::*;
+  /// assert_eq!(format!("{:.4}", Deg(1.0/60.0).normalize()), "0.0167°");
+  /// assert_eq!(format!("{:.4}", Deg(-1.0/60.0).normalize()), "359.9833°");
   /// ```
   impl Normalize for Deg {
     fn normalize(&self) -> Deg {
@@ -98,13 +135,15 @@ pub mod units {
 
   impl fmt::Display for DMS {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+      let sign = if self.deg < 0 || self.min < 0 || self.sec < 0.0 {"-"} else {""};
+      let DMS { deg : d, min : m, sec : s} = self;
       if self.sec == 0.0 {
-        write!(f, "{}°{}'0\"", self.deg, self.min)
+        write!(f, "{}{}°{}'0\"", sign, d.abs(), m.abs())
       } else
       if let Some(precision) = f.precision() {
-        write!(f, "{}°{}'{3:.*}\"", self.deg, self.min, precision, self.sec)
+        write!(f, "{}{}°{}'{4:.*}\"", sign, d.abs(), m.abs(), precision, s.abs())
       } else {
-        write!(f, "{}°{}'{}\"", self.deg, self.min, self.sec)
+        write!(f, "{}{}°{}'{}\"", sign, d.abs(), m.abs(), s.abs())
       }
     }
   }
