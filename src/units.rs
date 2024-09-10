@@ -193,6 +193,12 @@ impl Normalize for Deg {
     }
 }
 
+impl Normalize for Rad {
+    fn normalize(&self) -> Rad {
+        convert::deg_to_rad(convert::rad_to_deg(*self).normalize())
+    }
+}
+
 impl fmt::Display for Meter {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}m", self.0)
