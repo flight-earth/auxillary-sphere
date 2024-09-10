@@ -2,7 +2,16 @@ pub mod units {
   use std::fmt;
 
   #[derive(Debug, PartialEq, Clone, Copy)]
+  pub struct Rad(pub f64);
+
+  #[derive(Debug, PartialEq, Clone, Copy)]
   pub struct Deg(pub f64);
+
+  #[derive(Debug, PartialEq, Clone, Copy)]
+  pub struct Min(pub f64);
+
+  #[derive(Debug, PartialEq, Clone, Copy)]
+  pub struct Sec(pub f64);
 
   pub trait Normalize {
     fn normalize(&self) -> Self;
@@ -151,6 +160,38 @@ pub mod units {
       } else {
         write!(f, "{}{}°{}'{}\"", sign, d.abs(), m.abs(), s.abs())
       }
+    }
+  }
+
+  pub mod convert {
+    use super::*;
+
+    pub fn min_to_sec(Min(min): Min) -> Sec {
+      Sec(min * 60.0)
+    }
+
+    pub fn deg_to_sec(Deg(deg): Deg) -> Sec {
+      Sec(deg * 3600.0)
+    }
+
+    pub fn deg_to_min(Deg(deg): Deg) -> Min {
+      Min(deg * 60.0)
+    }
+
+    pub fn min_to_deg(Min(min): Min) -> Deg {
+      Deg(min / 60.0)
+    }
+
+    pub fn sec_to_deg(Sec(sec): Sec) -> Deg {
+      Deg(sec / 3600.0)
+    }
+
+    pub fn deg_to_rad(Deg(deg): Deg) -> Rad {
+      Rad(deg.to_radians())
+    }
+
+    pub fn rad_to_deg(Rad(rad): Rad) -> Deg {
+      Deg(rad.to_degrees())
     }
   }
 
