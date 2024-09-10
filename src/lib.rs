@@ -1,7 +1,7 @@
 pub mod units {
   use std::fmt;
 
-  #[derive(Debug, PartialEq)]
+  #[derive(Debug, PartialEq, Clone, Copy)]
   pub struct Deg(pub f64);
 
   #[derive(Debug, PartialEq)]
@@ -63,48 +63,30 @@ pub mod units {
       }
 
       #[test]
-      fn from_deg() {
+      fn from_deg_to_deg() {
         let dms_zero = DMS{ deg: 0, min: 0, sec: 0.0 };
         let deg_zero = Deg(0.0);
         assert_eq!(dms_zero, DMS::from_deg(deg_zero));
-
-        let dms_one = DMS{ deg: 1, min: 0, sec: 0.0 };
-        let deg_one= Deg(1.0);
-        assert_eq!(dms_one, DMS::from_deg(deg_one));
-
-        let dms_minus_one = DMS{ deg: -1, min: 0, sec: 0.0 };
-        let deg_minus_one= Deg(-1.0);
-        assert_eq!(dms_minus_one, DMS::from_deg(deg_minus_one));
-
-        let dms_169 = DMS{ deg: 169, min: 3, sec: 59.99999839625161 };
-        let deg_169= Deg(169.06666666622118);
-        assert_eq!(dms_169, DMS::from_deg(deg_169));
-
-        let dms_minus_169 = DMS{ deg: -169, min: 3, sec: 59.99999839625161 };
-        let deg_minus_169= Deg(-169.06666666622118);
-        assert_eq!(dms_minus_169, DMS::from_deg(deg_minus_169));
-      }
-
-      #[test]
-      fn to_deg() {
-        let dms_zero = DMS{ deg: 0, min: 0, sec: 0.0 };
-        let deg_zero = Deg(0.0);
         assert_eq!(deg_zero, dms_zero.to_deg());
 
         let dms_one = DMS{ deg: 1, min: 0, sec: 0.0 };
         let deg_one= Deg(1.0);
+        assert_eq!(dms_one, DMS::from_deg(deg_one));
         assert_eq!(deg_one, dms_one.to_deg());
 
         let dms_minus_one = DMS{ deg: -1, min: 0, sec: 0.0 };
         let deg_minus_one= Deg(-1.0);
+        assert_eq!(dms_minus_one, DMS::from_deg(deg_minus_one));
         assert_eq!(deg_minus_one, dms_minus_one.to_deg());
 
         let dms_169 = DMS{ deg: 169, min: 3, sec: 59.99999839625161 };
         let deg_169= Deg(169.06666666622118);
+        assert_eq!(dms_169, DMS::from_deg(deg_169));
         assert_eq!(deg_169, dms_169.to_deg());
 
         let dms_minus_169 = DMS{ deg: -169, min: 3, sec: 59.99999839625161 };
         let deg_minus_169= Deg(-169.06666666622118);
+        assert_eq!(dms_minus_169, DMS::from_deg(deg_minus_169));
         assert_eq!(deg_minus_169, dms_minus_169.to_deg());
       }
   }
