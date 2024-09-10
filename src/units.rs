@@ -1,4 +1,5 @@
 use std::fmt;
+use derive_more::{Mul};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Rad(pub f64);
@@ -11,6 +12,13 @@ pub struct Min(pub f64);
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Sec(pub f64);
+
+#[derive(Debug, PartialEq, Clone, Copy, Mul)]
+pub struct Meter(pub f64);
+
+#[derive(Debug, PartialEq, Clone, Copy, Mul)]
+pub struct Radius(pub Meter);
+
 
 pub trait Normalize {
     fn normalize(&self) -> Self;
@@ -182,6 +190,12 @@ impl Normalize for Deg {
         } else {
             Deg(x)
         }
+    }
+}
+
+impl fmt::Display for Meter {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}m", self.0)
     }
 }
 
