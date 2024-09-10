@@ -4,6 +4,10 @@ pub mod units {
   #[derive(Debug, PartialEq, Clone, Copy)]
   pub struct Deg(pub f64);
 
+  pub trait Normalize {
+    fn normalize(&self) -> Self;
+  }
+
   #[derive(Debug, PartialEq)]
   pub struct DMS {
     pub deg : i32,
@@ -40,15 +44,59 @@ pub mod units {
     }
   }
 
+  /// Normalize DMS to the degree equivalent of 0 <= deg < 360.
+  ///
+  /// ```
+  /// # use auxillary_sphere::units::*;
+  /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: -1, sec: 0.0 }.normalize()),
+  ///  "359°59'0\"");
+  /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: 0, sec: 61.0 }.normalize()),
+  ///  "0°1'1\"");
+  /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: 61, sec: 0.0 }.normalize()),
+  ///  "1°0'60\"");
+  /// assert_eq!(format!("{:.0}", DMS { deg: 1, min: 0, sec: 60.0 }.normalize()),
+  ///  "1°0'60\"");
+  /// ```
+  impl Normalize for DMS {
+    fn normalize(&self) -> DMS {
+      DMS::from_deg(DMS::to_deg(self).normalize())
+    }
+  }
+
+  impl Normalize for Deg {
+    fn normalize(&self) -> Deg {
+      let d = self.0;
+      let x = d % 360.0;
+      if x == 0.0 {
+        Deg(0.0)
+      } else if x < 0.0 {
+        Deg(360.0 + x)
+      } else {
+        Deg(x)
+      }
+    }
+  }
+
   impl fmt::Display for Deg {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-      write!(f, "{}°", self.0)
+      if let Some(precision) = f.precision() {
+        write!(f, "{1:.*}", precision, self.0)
+      } else {
+        write!(f, "{}°", self.0)
+      }
     }
   }
 
   impl fmt::Display for DMS {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-      write!(f, "{}°{}'{}\"", self.deg, self.min, self.sec)
+      if self.sec == 0.0 {
+        write!(f, "{}°{}'0", self.deg, self.min)
+      } else
+      if let Some(precision) = f.precision() {
+        write!(f, "{}°{}'{3:.*}\"", self.deg, self.min, precision, self.sec)
+      } else {
+        write!(f, "{}°{}'{}\"", self.deg, self.min, self.sec)
+      }
     }
   }
 
