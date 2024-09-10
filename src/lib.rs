@@ -49,13 +49,19 @@ pub mod units {
     }
   }
 
-  /// Normalize DMS to the degree equivalent of 0 <= deg < 360.
+  /// Normalize DMS to the degree equivalent of `0 <= deg < 360`.
   ///
   /// ```
   /// # use auxillary_sphere::units::*;
   /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: -1, sec: 0.0 }.normalize()), "359°59'0\"");
   /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: 0, sec: 61.0 }.normalize()), "0°1'1\"");
   /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: 61, sec: 0.0 }.normalize()), "1°0'60\"");
+  /// ```
+  /// 
+  /// Display doesn't round up `0'59.9"` to `1'0"`.
+  /// ```
+  /// # use auxillary_sphere::units::*;
+  /// assert_eq!(format!("{:.0}", DMS { deg: 1, min: 0, sec: 59.9 }.normalize()), "1°0'60\"");
   /// assert_eq!(format!("{:.0}", DMS { deg: 1, min: 0, sec: 60.0 }.normalize()), "1°0'60\"");
   /// ```
   /// 
@@ -91,7 +97,7 @@ pub mod units {
     }
   }
 
-  /// Normalize degree so that 0 <= deg < 360.
+  /// Normalize degree so that `0 <= deg < 360`.
   ///
   /// ```
   /// # use auxillary_sphere::units::*;
