@@ -1,6 +1,7 @@
 pub mod units {
   use std::fmt;
 
+  #[derive(Debug, PartialEq)]
   pub struct Deg(pub f64);
 
   #[derive(Debug, PartialEq)]
@@ -31,6 +32,17 @@ pub mod units {
       let d_frac = d_abs - (dd as f64);
       let (mm, m_frac) = div_mod(d_frac * 60.0, 1);
       DMS { deg: {if deg < 0.0 {-dd} else {dd}}, min: mm, sec: m_frac * 60.0 }
+    }
+
+    pub fn to_deg(&self) -> Deg {
+      let sign = if self.deg < 0 {-1.0} else {1.0};
+      Deg(sign * (self.deg.abs() as f64 + (self.min as f64 / 60.0) + (self.sec / 3600.0)))
+    }
+  }
+
+  impl fmt::Display for Deg {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+      write!(f, "{}°", self.0)
     }
   }
 
@@ -71,6 +83,29 @@ pub mod units {
         let dms_minus_169 = DMS{ deg: -169, min: 3, sec: 59.99999839625161 };
         let deg_minus_169= Deg(-169.06666666622118);
         assert_eq!(dms_minus_169, DMS::from_deg(deg_minus_169));
+      }
+
+      #[test]
+      fn to_deg() {
+        let dms_zero = DMS{ deg: 0, min: 0, sec: 0.0 };
+        let deg_zero = Deg(0.0);
+        assert_eq!(deg_zero, dms_zero.to_deg());
+
+        let dms_one = DMS{ deg: 1, min: 0, sec: 0.0 };
+        let deg_one= Deg(1.0);
+        assert_eq!(deg_one, dms_one.to_deg());
+
+        let dms_minus_one = DMS{ deg: -1, min: 0, sec: 0.0 };
+        let deg_minus_one= Deg(-1.0);
+        assert_eq!(deg_minus_one, dms_minus_one.to_deg());
+
+        let dms_169 = DMS{ deg: 169, min: 3, sec: 59.99999839625161 };
+        let deg_169= Deg(169.06666666622118);
+        assert_eq!(deg_169, dms_169.to_deg());
+
+        let dms_minus_169 = DMS{ deg: -169, min: 3, sec: 59.99999839625161 };
+        let deg_minus_169= Deg(-169.06666666622118);
+        assert_eq!(deg_minus_169, dms_minus_169.to_deg());
       }
   }
 }
