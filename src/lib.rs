@@ -63,6 +63,15 @@ pub mod units {
     }
   }
 
+  /// Normalize degree so that 0 <= deg < 360.
+  ///
+  /// ```
+  /// # use auxillary_sphere::units::*;
+  /// assert_eq!(format!("{:?}", Deg(0.0).normalize()), "Deg(0.0)");
+  /// assert_eq!(format!("{:?}", Deg(359.0).normalize()), "Deg(359.0)");
+  /// assert_eq!(format!("{:?}", Deg(361.0).normalize()), "Deg(1.0)");
+  /// assert_eq!(format!("{:?}", Deg(-1.0).normalize()), "Deg(359.0)");
+  /// ```
   impl Normalize for Deg {
     fn normalize(&self) -> Deg {
       let d = self.0;
@@ -80,7 +89,7 @@ pub mod units {
   impl fmt::Display for Deg {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
       if let Some(precision) = f.precision() {
-        write!(f, "{1:.*}", precision, self.0)
+        write!(f, "{1:.*}°", precision, self.0)
       } else {
         write!(f, "{}°", self.0)
       }
@@ -90,7 +99,7 @@ pub mod units {
   impl fmt::Display for DMS {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
       if self.sec == 0.0 {
-        write!(f, "{}°{}'0", self.deg, self.min)
+        write!(f, "{}°{}'0\"", self.deg, self.min)
       } else
       if let Some(precision) = f.precision() {
         write!(f, "{}°{}'{3:.*}\"", self.deg, self.min, precision, self.sec)
