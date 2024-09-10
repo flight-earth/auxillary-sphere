@@ -19,7 +19,7 @@ fn a_of_haversine (x: &LatLng, y : &LatLng) -> Rad {
   Rad(h_lat_f + x.lat.0.cos() * y.lat.0.cos() * h_lng_f)
 }
 
-fn distance (x : &LatLng, y : &LatLng) -> Dist {
+pub fn distance (x : &LatLng, y : &LatLng) -> Dist {
   let r = EARTH_RADIUS.0.0;
   let d = 2.0 * (a_of_haversine(x, y).0.sqrt().asin());
   Dist{dist : d * r}

@@ -1,4 +1,5 @@
 use crate::geodesy::latlng::LatLng;
+use std::fmt;
 
 pub struct Az {
     pub az: f64,
@@ -6,6 +7,12 @@ pub struct Az {
 
 pub struct Dist {
     pub dist: f64,
+}
+
+impl fmt::Display for Dist {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.dist)
+    }
 }
 
 pub struct DirectProblem {

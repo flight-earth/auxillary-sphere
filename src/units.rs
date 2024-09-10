@@ -1,5 +1,5 @@
 use std::fmt;
-use derive_more::{Mul};
+use derive_more::Mul;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Rad(pub f64);
