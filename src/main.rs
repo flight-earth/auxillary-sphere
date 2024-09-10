@@ -1,5 +1,5 @@
 use auxillary_sphere::units::DMS;
-use auxillary_sphere::geodesy::LatLng;
+use auxillary_sphere::geodesy::problems::LatLng;
 
 fn main() {
   let london = LatLng{lat: 51.5007, lng: -0.1246};
