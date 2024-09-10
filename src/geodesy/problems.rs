@@ -9,7 +9,7 @@ pub struct Az {
     pub az: f64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Dist {
     pub dist: f64,
 }

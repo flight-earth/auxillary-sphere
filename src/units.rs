@@ -67,7 +67,7 @@ pub mod convert {
         x % 2 == 0
     }
 
-    pub fn plus_minus_pi(deg_plus_minus: Deg) -> Deg {
+    pub fn plus_minus_pi_deg(deg_plus_minus: Deg) -> Deg {
         if deg_plus_minus.0.is_nan() {
             deg_plus_minus
         } else {
@@ -94,8 +94,16 @@ pub mod convert {
         }
     }
 
-    pub fn is_plus_minus_half_pi(deg: Deg) -> Option<Deg> {
-        let deg = plus_minus_pi(deg);
+    pub fn plus_minus_pi_rad(rad: Rad) -> Rad {
+        deg_to_rad(plus_minus_pi_deg(rad_to_deg(rad)))
+    }
+
+    pub fn is_plus_minus_half_pi_rad(rad: Rad) -> Option<Rad> {
+        is_plus_minus_half_pi_deg(rad_to_deg(rad)).map(deg_to_rad)
+    }
+
+    pub fn is_plus_minus_half_pi_deg(deg: Deg) -> Option<Deg> {
+        let deg = plus_minus_pi_deg(deg);
         if deg.0 < -90.0 || deg.0 > 90.0 {
             None
         } else {
