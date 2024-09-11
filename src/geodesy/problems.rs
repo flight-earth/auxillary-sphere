@@ -4,12 +4,12 @@ use crate::{
 };
 use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Az {
     pub az: f64,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct Dist {
     pub dist: f64,
 }
@@ -33,7 +33,7 @@ pub struct DirectSolution {
     pub az2: Option<Az>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct InverseSolution {
     pub s: Dist,
     pub az1: Az,

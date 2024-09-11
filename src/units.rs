@@ -1,4 +1,5 @@
 use std::fmt;
+use convert::is_even;
 use derive_more::Mul;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
@@ -168,6 +169,54 @@ impl DMS {
     pub fn to_deg(&self) -> Deg {
         let sign = if self.deg < 0 { -1.0 } else { 1.0 };
         Deg(sign * (self.deg.abs() as f64 + (self.min as f64 / 60.0) + (self.sec / 3600.0)))
+    }
+
+    pub fn diff_dms(x: DMS, y: DMS) -> DMS {
+        DMS::from_deg(Deg(y.to_deg().0 - x.to_deg().0).normalize())
+    }
+
+    pub fn abs_diff_dms(x: DMS, y: DMS) -> DMS {
+        let d = Self::diff_dms(x, y);
+        if d.to_deg().0 > (DMS { deg: 180, min: 0, sec: 0.0 }).to_deg().0 {
+            Self::diff_dms(DMS { deg: 360, min: 0, sec: 0.0 }, d)
+        } else {
+            d
+        }
+    }
+
+    pub fn dms_plus_minus_pi(dms: DMS) -> DMS {
+        let d = dms.to_deg().0;
+        let (a, b) = div_mod(d, 180);
+        DMS::from_deg(Deg(if b == 0.0 {
+            if is_even(a.abs() as u64) {
+                0.0
+            } else {
+                (if a < 0 { -1.0 } else { 1.0 }) * 180.0
+            }
+        } else {
+            if is_even(a.abs() as u64) {
+                b
+            } else {
+                b - 180.0
+            }
+        }))
+    }
+
+    pub fn dms_plus_minus_half_pi(dms: DMS) -> Option<DMS> {
+        let deg = Self::dms_plus_minus_pi(dms).to_deg().0;
+        if deg < -90.0 || deg > 90.0 {
+            None
+        } else {
+            Some(DMS::from_deg(Deg(deg)))
+        }
+    }
+
+    pub fn diff_dms_180(y: DMS) -> impl Fn(DMS) -> DMS {
+        move |x| Self::diff_dms(DMS { deg: 180, min: 0, sec: 0.0 }.rotate(y), x)
+    }
+
+    pub fn abs_diff_dms_180(y: DMS) -> impl Fn(DMS) -> DMS {
+        move |x| Self::abs_diff_dms(DMS { deg: 180, min: 0, sec: 0.0 }.rotate(y), x)
     }
 }
 

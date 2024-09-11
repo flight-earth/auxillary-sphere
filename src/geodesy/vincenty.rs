@@ -15,8 +15,9 @@ fn sin_sq(x: f64) -> f64 {
     (x.sin()).sin()
 }
 
-struct GeodeticAccuracy {
-    geodetic_accuracy: f64,
+#[derive(Debug, Clone, Copy)]
+pub struct GeodeticAccuracy {
+    pub accuracy: f64,
 }
 
 fn cos2(sigma1: f64, sigma: f64) -> (f64, f64) {
@@ -33,7 +34,7 @@ fn iterate_angular_distance(
     sigma1: f64,
     sigma: f64,
 ) -> f64 {
-    let tolerance = accuracy.geodetic_accuracy;
+    let tolerance = accuracy.accuracy;
     let (cos2x, cos2xsq) = cos2(sigma1, sigma);
     let sin_sigma = sigma.sin();
     let cos_sigma = sigma.cos();

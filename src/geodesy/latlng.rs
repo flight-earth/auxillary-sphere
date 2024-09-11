@@ -2,7 +2,7 @@ use crate::units::{convert::*, DMS};
 use crate::units::{Deg, Rad};
 use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub struct LatLng {
     pub lat: Rad,
     pub lng: Rad,

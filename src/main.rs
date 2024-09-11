@@ -1,3 +1,4 @@
+use auxillary_sphere::geodesy::published::vincenty1975::vincenty_units;
 use auxillary_sphere::units::DMS;
 use auxillary_sphere::geodesy::latlng::LatLng;
 use auxillary_sphere::geodesy::problems::InverseProblem;
@@ -18,4 +19,7 @@ fn main() {
 
   let dms = DMS{deg: 90, min: 12, sec: 0.999};
   println!("DMS: {dms}");
+
+  println!("Vincenty 1975 Published Data Checks");
+  let _ = vincenty_units();
 }

@@ -14,5 +14,8 @@ pub mod geodesy {
     pub mod published {
         pub mod vincenty1975;
     }
+    pub mod point_to_point {
+        pub mod vincenty;
+    }
 }
 pub mod units;
