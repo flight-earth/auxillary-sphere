@@ -1,3 +1,9 @@
+// Test data from ...
+//
+// Direct and Inverse Solutions of Geodesics on the Ellipsoid with Applications
+// of Nested Equations
+// Survey Review XXII, 176
+// T. Vincenty, April 1975.
 use crate::{
     earth::ellipsoid::*,
     geodesy::problems::{Az, Dist, InverseProblem, InverseSolution},
@@ -232,5 +238,12 @@ pub fn inverse_solutions() -> Vec<InverseSolution> {
                 az: deg_to_rad(y_azimuth.to_deg()).0,
             }),
         })
+        .collect()
+}
+
+pub fn direct_pairs() -> Vec<(InverseProblem, InverseSolution)> {
+    inverse_problems()
+        .into_iter()
+        .zip(inverse_solutions().into_iter())
         .collect()
 }
