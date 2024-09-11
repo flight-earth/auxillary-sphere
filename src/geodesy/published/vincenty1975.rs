@@ -10,7 +10,7 @@ use crate::{
         latlng::LatLng,
         problems::{Az, Dist, InverseProblem, InverseSolution},
     },
-    units::{convert::deg_to_rad, Normalize, Rad, DMS},
+    units::{convert::deg_to_rad, Angle, Rad, DMS},
 };
 
 // SEE: https://stackoverflow.com/questions/23810032/how-to-specify-const-array-in-global-scope-in-rust

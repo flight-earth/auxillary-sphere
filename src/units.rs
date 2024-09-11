@@ -20,7 +20,7 @@ pub struct Meter(pub f64);
 pub struct Radius(pub Meter);
 
 
-pub trait Normalize {
+pub trait Angle {
     fn normalize(&self) -> Self;
 }
 
@@ -211,7 +211,7 @@ impl DMS {
 /// assert_eq!(format!("{:.0}", DMS::from_deg(Deg(-1.0/3600.0).normalize())), "359°59'59\"");
 /// assert_eq!(format!("{:.0}", DMS::from_deg(Deg(-1.0/3600.0)).normalize()), "359°59'59\"");
 /// ```
-impl Normalize for DMS {
+impl Angle for DMS {
     fn normalize(&self) -> DMS {
         DMS::from_deg(DMS::to_deg(self).normalize())
     }
@@ -235,7 +235,7 @@ impl Normalize for DMS {
 /// assert_eq!(format!("{:.4}", Deg(1.0/60.0).normalize()), "0.0167°");
 /// assert_eq!(format!("{:.4}", Deg(-1.0/60.0).normalize()), "359.9833°");
 /// ```
-impl Normalize for Deg {
+impl Angle for Deg {
     fn normalize(&self) -> Deg {
         let d = self.0;
         let x = d % 360.0;
@@ -249,7 +249,7 @@ impl Normalize for Deg {
     }
 }
 
-impl Normalize for Rad {
+impl Angle for Rad {
     fn normalize(&self) -> Rad {
         convert::deg_to_rad(convert::rad_to_deg(*self).normalize())
     }

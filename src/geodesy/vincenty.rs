@@ -2,7 +2,7 @@ use crate::{
     earth::ellipsoid::{flattening, polar_r, Ellipsoid},
     units::{
         convert::{is_plus_minus_half_pi_rad, plus_minus_pi_rad, rad_to_deg},
-        Meter, Normalize, Rad, Radius,
+        Meter, Angle, Rad, Radius,
     },
 };
 
