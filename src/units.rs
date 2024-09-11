@@ -19,9 +19,11 @@ pub struct Meter(pub f64);
 #[derive(Debug, PartialEq, Clone, Copy, Mul)]
 pub struct Radius(pub Meter);
 
-
 pub trait Angle {
     fn normalize(&self) -> Self;
+    fn plus_minus_pi(&self) -> Self;
+    fn plus_minus_half_pi(&self) -> Option<Self> where Self: Sized;
+    fn rotate(&self, other: Self) -> Self;
 }
 
 pub mod convert {
@@ -215,6 +217,18 @@ impl Angle for DMS {
     fn normalize(&self) -> DMS {
         DMS::from_deg(DMS::to_deg(self).normalize())
     }
+    
+    fn plus_minus_pi(&self) -> Self {
+        DMS::from_deg(DMS::to_deg(self).plus_minus_pi())
+    }
+    
+    fn plus_minus_half_pi(&self) -> Option<Self> where Self: Sized {
+        (DMS::to_deg(self).plus_minus_half_pi()).map(|x| DMS::from_deg(x))
+    }
+    
+    fn rotate(&self, other: Self) -> Self {
+        DMS::from_deg(DMS::to_deg(self).rotate(DMS::to_deg(&other)).normalize())
+    }
 }
 
 /// Normalize degree so that `0 <= deg < 360`.
@@ -247,11 +261,35 @@ impl Angle for Deg {
             Deg(x)
         }
     }
+
+    fn plus_minus_pi(&self) -> Self {
+        convert::plus_minus_pi_deg(*self)
+    }
+    
+    fn plus_minus_half_pi(&self) -> Option<Self> where Self: Sized {
+        convert::is_plus_minus_half_pi_deg(*self)
+    }
+    
+    fn rotate(&self, other: Self) -> Self {
+        Deg(self.0 + other.0).normalize()
+    }
 }
 
 impl Angle for Rad {
     fn normalize(&self) -> Rad {
         convert::deg_to_rad(convert::rad_to_deg(*self).normalize())
+    }
+    
+    fn plus_minus_pi(&self) -> Self {
+        convert::plus_minus_pi_rad(*self)
+    }
+    
+    fn plus_minus_half_pi(&self) -> Option<Self> where Self: Sized {
+        convert::is_plus_minus_half_pi_rad(*self)
+    }
+    
+    fn rotate(&self, other: Self) -> Self {
+        Rad(self.0 + other.0).normalize()
     }
 }
 
