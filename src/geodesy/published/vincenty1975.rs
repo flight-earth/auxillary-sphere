@@ -6,8 +6,11 @@
 // T. Vincenty, April 1975.
 use crate::{
     earth::ellipsoid::*,
-    geodesy::problems::{Az, Dist, InverseProblem, InverseSolution},
-    units::{convert::deg_to_rad, DMS},
+    geodesy::{
+        latlng::LatLng,
+        problems::{Az, Dist, InverseProblem, InverseSolution},
+    },
+    units::{convert::deg_to_rad, Normalize, Rad, DMS},
 };
 
 // SEE: https://stackoverflow.com/questions/23810032/how-to-specify-const-array-in-global-scope-in-rust
@@ -246,4 +249,78 @@ pub fn direct_pairs() -> Vec<(InverseProblem, InverseSolution)> {
         .into_iter()
         .zip(inverse_solutions().into_iter())
         .collect()
+}
+
+pub fn direct_problems() -> Vec<InverseProblem> {
+    direct_pairs().into_iter().map(|(p, _)| p).collect()
+}
+
+pub fn direct_solutions() -> Vec<InverseSolution> {
+    direct_pairs().into_iter().map(|(_, s)| s).collect()
+}
+
+// Units of mm.
+pub const TOLERANCE: f64 = 0.008;
+
+// From the paper, Vincenty's errors were mm of -0.4, -0.4, -0.7, -0.2 and -0.8.
+pub const INDIRECT_DISTANCE_TOLERANCES: [f64; 5] =
+    [0.000404, 0.000387, 0.000703, 0.000197, 0.000787];
+
+pub const AZ_TOLERANCE: DMS = DMS {
+    deg: 0,
+    min: 0,
+    sec: 0.016667,
+};
+
+// Units of kilometers for distance and tolerance.
+pub type Distance = f64;
+pub type TestTolerance = f64;
+
+pub type DiffDMS = fn(DMS, DMS) -> DMS;
+pub type AzTolerance = DMS;
+pub type SpanLatLng = fn(LatLng, LatLng) -> Distance;
+pub type AzimuthFwd = fn(LatLng, LatLng) -> Option<Rad>;
+pub type AzimuthBwd = fn(LatLng, LatLng) -> Option<Rad>;
+
+pub fn describe_inverse_distance(
+    x: DMS,
+    y: DMS,
+    s_expected: Distance,
+    tolerance: TestTolerance,
+) -> String {
+    format!("{} to {} = {} ± {}", x, y, s_expected, tolerance)
+}
+
+pub fn describe_azimuth_fwd(
+    x: DMS,
+    y: DMS,
+    az_actual: Option<DMS>,
+    az_expected: DMS,
+    tolerance: AzTolerance,
+) -> String {
+    format!(
+        "{} to {} -> {} ± {} ({:?})",
+        x,
+        y,
+        az_expected,
+        tolerance,
+        az_actual.map(|x| x.normalize())
+    )
+}
+
+pub fn describe_azimuth_rev(
+    x: DMS,
+    y: DMS,
+    az_actual: Option<DMS>,
+    az_expected: DMS,
+    tolerance: AzTolerance,
+) -> String {
+    format!(
+        "{} to {} <- {} ± {} ({:?})",
+        x,
+        y,
+        az_expected,
+        tolerance,
+        az_actual.map(|x| x.normalize())
+    )
 }
