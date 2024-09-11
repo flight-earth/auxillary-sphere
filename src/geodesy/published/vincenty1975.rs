@@ -526,6 +526,7 @@ pub fn vincenty_units() -> Result<(), String> {
         .map(|&d| Dist { dist: d })
         .collect::<Vec<_>>();
 
+    // TODO: Add direct checks to checks
     let checks = inverse_checks(
         diff_az_fwd,
         diff_az_rev,
