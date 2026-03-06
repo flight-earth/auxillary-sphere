@@ -20,10 +20,10 @@ use crate::{
 };
 
 // SEE: https://stackoverflow.com/questions/23810032/how-to-specify-const-array-in-global-scope-in-rust
-pub static ELLIPSOIDS: &'static [Ellipsoid] = &[BESSEL, HAYFORD, HAYFORD, HAYFORD, HAYFORD];
+pub static ELLIPSOIDS: &[Ellipsoid] = &[BESSEL, HAYFORD, HAYFORD, HAYFORD, HAYFORD];
 
 // Distances in meters
-pub static DISTANCES: &'static [f64] = &[
+pub static DISTANCES: &[f64] = &[
     14110526.170,
     4085966.703,
     8084823.839,
@@ -31,7 +31,7 @@ pub static DISTANCES: &'static [f64] = &[
     19780006.558,
 ];
 
-pub static X_AZIMUTHS: &'static [DMS] = &[
+pub static X_AZIMUTHS: &[DMS] = &[
     DMS {
         deg: 96,
         min: 36,
@@ -59,7 +59,7 @@ pub static X_AZIMUTHS: &'static [DMS] = &[
     },
 ];
 
-pub static Y_AZIMUTHS: &'static [DMS] = &[
+pub static Y_AZIMUTHS: &[DMS] = &[
     DMS {
         deg: 137,
         min: 52,
@@ -87,7 +87,7 @@ pub static Y_AZIMUTHS: &'static [DMS] = &[
     },
 ];
 
-pub static INVERSE_PROBLEM_DATA: &'static [((DMS, DMS), (DMS, DMS))] = &[
+pub static INVERSE_PROBLEM_DATA: &[((DMS, DMS), (DMS, DMS))] = &[
     (
         (
             DMS {
