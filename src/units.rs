@@ -227,10 +227,10 @@ impl DMS {
 
     pub fn dms_plus_minus_half_pi(dms: DMS) -> Option<DMS> {
         let deg = Self::dms_plus_minus_pi(dms).to_deg().0;
-        if deg < -90.0 || deg > 90.0 {
-            None
-        } else {
+        if (-90.0..=90.0).contains(&deg) {
             Some(DMS::from_deg(Deg(deg)))
+        } else {
+            None
         }
     }
 
