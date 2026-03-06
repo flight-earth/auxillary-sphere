@@ -1,6 +1,6 @@
-use std::fmt;
 use convert::is_even;
 use derive_more::Mul;
+use std::fmt;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Rad(pub f64);
@@ -23,7 +23,9 @@ pub struct Radius(pub Meter);
 pub trait Angle {
     fn normalize(&self) -> Self;
     fn plus_minus_pi(&self) -> Self;
-    fn plus_minus_half_pi(&self) -> Option<Self> where Self: Sized;
+    fn plus_minus_half_pi(&self) -> Option<Self>
+    where
+        Self: Sized;
     fn rotate(&self, other: Self) -> Self;
 }
 
@@ -77,7 +79,12 @@ pub mod convert {
             let deg = deg_plus_minus.0.abs();
             let n = (deg / 180.0).floor();
             let d = deg - n * 180.0;
-            let m = ord_to_float(deg_plus_minus.0.partial_cmp(&0.0).unwrap_or(std::cmp::Ordering::Equal));
+            let m = ord_to_float(
+                deg_plus_minus
+                    .0
+                    .partial_cmp(&0.0)
+                    .unwrap_or(std::cmp::Ordering::Equal),
+            );
 
             if d == 0.0 {
                 if is_even(n.abs() as u64) {
@@ -86,13 +93,14 @@ pub mod convert {
                     Deg(m * 180.0)
                 }
             } else {
-                Deg((m * d) + if is_even(n.abs() as u64) {
-                    0.0
-                } else if deg_plus_minus.0 >= 0.0 {
-                    -180.0
-                } else {
-                    180.0
-                })
+                Deg((m * d)
+                    + if is_even(n.abs() as u64) {
+                        0.0
+                    } else if deg_plus_minus.0 >= 0.0 {
+                        -180.0
+                    } else {
+                        180.0
+                    })
             }
         }
     }
@@ -177,8 +185,23 @@ impl DMS {
 
     pub fn abs_diff_dms(x: DMS, y: DMS) -> DMS {
         let d = Self::diff_dms(x, y);
-        if d.to_deg().0 > (DMS { deg: 180, min: 0, sec: 0.0 }).to_deg().0 {
-            Self::diff_dms(DMS { deg: 360, min: 0, sec: 0.0 }, d)
+        if d.to_deg().0
+            > (DMS {
+                deg: 180,
+                min: 0,
+                sec: 0.0,
+            })
+            .to_deg()
+            .0
+        {
+            Self::diff_dms(
+                DMS {
+                    deg: 360,
+                    min: 0,
+                    sec: 0.0,
+                },
+                d,
+            )
         } else {
             d
         }
@@ -212,11 +235,31 @@ impl DMS {
     }
 
     pub fn diff_dms_180(y: DMS) -> impl Fn(DMS) -> DMS {
-        move |x| Self::diff_dms(DMS { deg: 180, min: 0, sec: 0.0 }.rotate(y), x)
+        move |x| {
+            Self::diff_dms(
+                DMS {
+                    deg: 180,
+                    min: 0,
+                    sec: 0.0,
+                }
+                .rotate(y),
+                x,
+            )
+        }
     }
 
     pub fn abs_diff_dms_180(y: DMS) -> impl Fn(DMS) -> DMS {
-        move |x| Self::abs_diff_dms(DMS { deg: 180, min: 0, sec: 0.0 }.rotate(y), x)
+        move |x| {
+            Self::abs_diff_dms(
+                DMS {
+                    deg: 180,
+                    min: 0,
+                    sec: 0.0,
+                }
+                .rotate(y),
+                x,
+            )
+        }
     }
 }
 
@@ -266,15 +309,18 @@ impl Angle for DMS {
     fn normalize(&self) -> DMS {
         DMS::from_deg(DMS::to_deg(self).normalize())
     }
-    
+
     fn plus_minus_pi(&self) -> Self {
         DMS::from_deg(DMS::to_deg(self).plus_minus_pi())
     }
-    
-    fn plus_minus_half_pi(&self) -> Option<Self> where Self: Sized {
+
+    fn plus_minus_half_pi(&self) -> Option<Self>
+    where
+        Self: Sized,
+    {
         (DMS::to_deg(self).plus_minus_half_pi()).map(|x| DMS::from_deg(x))
     }
-    
+
     fn rotate(&self, other: Self) -> Self {
         DMS::from_deg(DMS::to_deg(self).rotate(DMS::to_deg(&other)).normalize())
     }
@@ -314,11 +360,14 @@ impl Angle for Deg {
     fn plus_minus_pi(&self) -> Self {
         convert::plus_minus_pi_deg(*self)
     }
-    
-    fn plus_minus_half_pi(&self) -> Option<Self> where Self: Sized {
+
+    fn plus_minus_half_pi(&self) -> Option<Self>
+    where
+        Self: Sized,
+    {
         convert::is_plus_minus_half_pi_deg(*self)
     }
-    
+
     fn rotate(&self, other: Self) -> Self {
         Deg(self.0 + other.0).normalize()
     }
@@ -328,15 +377,18 @@ impl Angle for Rad {
     fn normalize(&self) -> Rad {
         convert::deg_to_rad(convert::rad_to_deg(*self).normalize())
     }
-    
+
     fn plus_minus_pi(&self) -> Self {
         convert::plus_minus_pi_rad(*self)
     }
-    
-    fn plus_minus_half_pi(&self) -> Option<Self> where Self: Sized {
+
+    fn plus_minus_half_pi(&self) -> Option<Self>
+    where
+        Self: Sized,
+    {
         convert::is_plus_minus_half_pi_rad(*self)
     }
-    
+
     fn rotate(&self, other: Self) -> Self {
         Rad(self.0 + other.0).normalize()
     }

@@ -1,6 +1,14 @@
 use std::f64::consts::PI;
 
-use crate::{earth::ellipsoid::{flattening, polar_r, Ellipsoid}, geodesy::{latlng::LatLng, problems::{Az, Dist, InverseProblem, InverseSolution}, vincenty::GeodeticAccuracy}, units::{Meter, Rad, Radius}};
+use crate::{
+    earth::ellipsoid::{flattening, polar_r, Ellipsoid},
+    geodesy::{
+        latlng::LatLng,
+        problems::{Az, Dist, InverseProblem, InverseSolution},
+        vincenty::GeodeticAccuracy,
+    },
+    units::{Meter, Rad, Radius},
+};
 
 #[derive(Debug, Clone, Copy)]
 enum GeodeticInverse {
@@ -50,13 +58,18 @@ impl InverseStep {
         let c = self.f / 16.0 * cos2_alpha * (4.0 + self.f * (4.0 - 3.0 * cos2_alpha));
         let u2 = cos2_alpha * (self.a * self.a - self.b * self.b) / (self.b * self.b);
 
-        let cos2_sigma_m = if cos2_alpha == 0.0 { 0.0 } else { cos_sigma - 2.0 * self.sin_u1_sin_u2 / cos2_alpha };
+        let cos2_sigma_m = if cos2_alpha == 0.0 {
+            0.0
+        } else {
+            cos_sigma - 2.0 * self.sin_u1_sin_u2 / cos2_alpha
+        };
         let cos2_2_sigma_m = cos2_sigma_m * cos2_sigma_m;
 
         let a = 1.0 + u2 / 16384.0 * (4096.0 + u2 * (-768.0 + u2 * (320.0 - 175.0 * u2)));
         let b = u2 / 1024.0 * (256.0 + u2 * (-128.0 + u2 * (74.0 - 47.0 * u2)));
 
-        let y = cos_sigma * (-1.0 + 2.0 * cos2_2_sigma_m) - b / 6.0 * cos2_sigma_m * (-3.0 + 4.0 * sin2_sigma) * (-3.0 + 4.0 * cos2_2_sigma_m);
+        let y = cos_sigma * (-1.0 + 2.0 * cos2_2_sigma_m)
+            - b / 6.0 * cos2_sigma_m * (-3.0 + 4.0 * sin2_sigma) * (-3.0 + 4.0 * cos2_2_sigma_m);
 
         let delta_sigma = b * sin_sigma * (cos2_sigma_m + b / 4.0 * y);
 
@@ -71,9 +84,9 @@ impl InverseStep {
             self.iloop(lambda_prime)
         } else {
             GeodeticInverse::GeodeticInverse(InverseSolution {
-                s: Dist{dist:s},
-                az1: Az{az:alpha1},
-                az2: Some(Az{az:alpha2}),
+                s: Dist { dist: s },
+                az1: Az { az: alpha1 },
+                az2: Some(Az { az: alpha2 }),
             })
         }
     }
@@ -83,7 +96,11 @@ fn normalize_lng(lng: f64) -> f64 {
     lng % (2.0 * PI)
 }
 
-fn inverse(ellipsoid: Ellipsoid, tolerance: GeodeticAccuracy, p: InverseProblem) -> GeodeticInverse {
+fn inverse(
+    ellipsoid: Ellipsoid,
+    tolerance: GeodeticAccuracy,
+    p: InverseProblem,
+) -> GeodeticInverse {
     let Rad(phi1) = p.x.lat;
     let Rad(l1) = p.x.lng;
     let Rad(phi2) = p.y.lat;
@@ -133,9 +150,9 @@ fn inverse(ellipsoid: Ellipsoid, tolerance: GeodeticAccuracy, p: InverseProblem)
 fn distance_unchecked(ellipsoid: Ellipsoid, prob: InverseProblem) -> GeodeticInverse {
     if prob.x == prob.y {
         GeodeticInverse::GeodeticInverse(InverseSolution {
-            s: Dist{dist: 0.0},
-            az1: Az{az:0.0},
-            az2: Some(Az{az:PI}),
+            s: Dist { dist: 0.0 },
+            az1: Az { az: 0.0 },
+            az2: Some(Az { az: PI }),
         })
     } else {
         inverse(ellipsoid, GeodeticAccuracy { accuracy: 1e-12 }, prob)

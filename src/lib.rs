@@ -8,9 +8,9 @@ pub mod earth {
 }
 pub mod geodesy {
     pub mod haversines;
-    pub mod vincenty;
     pub mod latlng;
     pub mod problems;
+    pub mod vincenty;
     pub mod published {
         pub mod vincenty1975;
     }
