@@ -69,7 +69,7 @@ pub mod convert {
     }
 
     pub fn is_even(x: u64) -> bool {
-        x % 2 == 0
+        x.is_multiple_of(2)
     }
 
     pub fn plus_minus_pi_deg(deg_plus_minus: Deg) -> Deg {
