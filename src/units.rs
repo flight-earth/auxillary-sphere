@@ -211,13 +211,13 @@ impl DMS {
         let d = dms.to_deg().0;
         let (a, b) = div_mod(d, 180);
         DMS::from_deg(Deg(if b == 0.0 {
-            if is_even(a.abs() as u64) {
+            if is_even(a.unsigned_abs() as u64) {
                 0.0
             } else {
                 (if a < 0 { -1.0 } else { 1.0 }) * 180.0
             }
         } else {
-            if is_even(a.abs() as u64) {
+            if is_even(a.unsigned_abs() as u64) {
                 b
             } else {
                 b - 180.0
