@@ -216,12 +216,10 @@ impl DMS {
             } else {
                 (if a < 0 { -1.0 } else { 1.0 }) * 180.0
             }
+        } else if is_even(a.unsigned_abs() as u64) {
+            b
         } else {
-            if is_even(a.unsigned_abs() as u64) {
-                b
-            } else {
-                b - 180.0
-            }
+            b - 180.0
         }))
     }
 
