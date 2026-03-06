@@ -408,6 +408,7 @@ pub fn rad_to_dms(rad: Rad) -> DMS {
     DMS::from_deg(rad_to_deg(rad))
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn inverse_checks(
     diff_az_fwd: fn(DMS, DMS) -> DMS,
     diff_az_rev: fn(DMS, DMS) -> DMS,
