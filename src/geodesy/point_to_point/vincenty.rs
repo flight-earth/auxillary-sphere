@@ -12,9 +12,9 @@ use crate::{
 
 #[derive(Debug, Clone, Copy)]
 enum GeodeticInverse {
-    GeodeticInverse(InverseSolution),
-    GeodeticInverseAntipodal,
-    GeodeticInverseAbnormal,
+    Solution(InverseSolution),
+    Antipodal,
+    Abnormal,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -35,7 +35,7 @@ struct InverseStep {
 impl InverseStep {
     fn iloop(&self, lambda: f64) -> GeodeticInverse {
         if lambda.abs() > PI {
-            return GeodeticInverse::GeodeticInverseAntipodal;
+            return GeodeticInverse::Antipodal;
         }
 
         let sin_lambda = lambda.sin();
@@ -83,7 +83,7 @@ impl InverseStep {
         if (lambda - lambda_prime).abs() >= self.tolerance.accuracy {
             self.iloop(lambda_prime)
         } else {
-            GeodeticInverse::GeodeticInverse(InverseSolution {
+            GeodeticInverse::Solution(InverseSolution {
                 s: Dist { dist: s },
                 az1: Az { az: alpha1 },
                 az2: Some(Az { az: alpha2 }),
@@ -149,7 +149,7 @@ fn inverse(
 
 fn distance_unchecked(ellipsoid: Ellipsoid, prob: InverseProblem) -> GeodeticInverse {
     if prob.x == prob.y {
-        GeodeticInverse::GeodeticInverse(InverseSolution {
+        GeodeticInverse::Solution(InverseSolution {
             s: Dist { dist: 0.0 },
             az1: Az { az: 0.0 },
             az2: Some(Az { az: PI }),
@@ -162,7 +162,7 @@ fn distance_unchecked(ellipsoid: Ellipsoid, prob: InverseProblem) -> GeodeticInv
 pub(crate) fn distance(e: Ellipsoid, x: LatLng, y: LatLng) -> Result<Dist, String> {
     let prob = InverseProblem { x, y };
     match distance_unchecked(e, prob) {
-        GeodeticInverse::GeodeticInverse(solution) => Ok(solution.s),
+        GeodeticInverse::Solution(solution) => Ok(solution.s),
         _ => Err("Distance calculation failed".to_string()),
     }
 }
