@@ -318,7 +318,7 @@ impl Angle for DMS {
     where
         Self: Sized,
     {
-        (DMS::to_deg(self).plus_minus_half_pi()).map(|x| DMS::from_deg(x))
+        (DMS::to_deg(self).plus_minus_half_pi()).map(DMS::from_deg)
     }
 
     fn rotate(&self, other: Self) -> Self {
