@@ -1,0 +1,13 @@
+# https://langston-barrett.github.io/lun/config.html
+
+[[tool]]
+name = "cargo clippy"
+configs = ["Cargo.toml"]
+
+[[tool]]
+name = "cargo test"
+configs = ["Cargo.toml"]
+
+[[tool]]
+name = "cargo fmt"
+configs = ["rustfmt.toml"]
