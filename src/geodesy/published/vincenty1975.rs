@@ -253,7 +253,7 @@ pub fn inverse_solutions() -> Vec<InverseSolution> {
 pub fn direct_pairs() -> Vec<(InverseProblem, InverseSolution)> {
     inverse_problems()
         .into_iter()
-        .zip(inverse_solutions().into_iter())
+        .zip(inverse_solutions())
         .collect()
 }
 
