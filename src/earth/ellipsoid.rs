@@ -1,4 +1,5 @@
 use crate::units::*;
+use std::fmt;
 
 #[derive(Copy, Clone)]
 pub struct Ellipsoid {
@@ -6,10 +7,10 @@ pub struct Ellipsoid {
     pub recip_f: f64,
 }
 
-impl ToString for Ellipsoid {
-    fn to_string(&self) -> String {
+impl fmt::Display for Ellipsoid {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let r = self.equatorial_r.0;
-        format!("R={}, 1/ƒ={}", r, self.recip_f)
+        write!(f, "R={}, 1/ƒ={}", r, self.recip_f)
     }
 }
 
