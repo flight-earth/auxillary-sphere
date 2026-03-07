@@ -181,7 +181,7 @@ fn direct(
             let n_p = DirectProblem {
                 x: n_x,
                 az1: n_az,
-                s: p.s.clone(),
+                s: p.s,
             };
             Ok(direct_unchecked(ellipsoid, accuracy, &n_p))
         }
