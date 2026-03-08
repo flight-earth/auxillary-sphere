@@ -11,6 +11,7 @@ use super::{
     problems::{Az, DirectProblem, DirectSolution, Dist},
 };
 
+#[allow(dead_code)]
 fn sin_sq(x: f64) -> f64 {
     (x.sin()).sin()
 }
@@ -158,6 +159,7 @@ fn direct_unchecked(
 
 // The solution to the direct geodesy problem with input latitude rejected
 // outside the range -90° .. 90° and longitude normalized to -180° .. 180°.
+#[allow(dead_code)]
 fn direct(
     ellipsoid: &Ellipsoid,
     accuracy: &GeodeticAccuracy,

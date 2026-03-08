@@ -46,6 +46,7 @@ fn azimuth_rev(x: &LatLng, y: &LatLng) -> Option<Rad> {
     azimuth_fwd(y, x).map(|az| az.rotate(Rad(PI)))
 }
 
+#[allow(dead_code)]
 fn direct(prob: DirectProblem) -> DirectSolution {
     let LatLng {
         lat: Rad(lat1),

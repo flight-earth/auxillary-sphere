@@ -14,6 +14,7 @@ use crate::{
 enum GeodeticInverse {
     Solution(InverseSolution),
     Antipodal,
+    #[allow(dead_code)]
     Abnormal,
 }
 
