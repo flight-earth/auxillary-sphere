@@ -87,6 +87,7 @@ pub static Y_AZIMUTHS: &[DMS] = &[
     },
 ];
 
+#[allow(clippy::type_complexity)]
 pub static INVERSE_PROBLEM_DATA: &[((DMS, DMS), (DMS, DMS))] = &[
     (
         (
