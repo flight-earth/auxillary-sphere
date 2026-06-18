@@ -1,7 +1,10 @@
 [package]
 name = "auxillary-sphere"
+description = "Geodesy problems and their solutions"
 version = "0.1.0"
 edition = "2021"
+license = "MPL-2.0"
+repository = "https://github.com/flight-earth/auxillary-sphere"
 
 [dependencies]
 derive_more = { version = "1.0.0", features = ["full"] }
