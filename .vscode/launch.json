@@ -7,16 +7,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in library 'auxillary_sphere'",
+            "name": "Debug unit tests in library 'auxiliary_sphere'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
                     "--lib",
-                    "--package=auxillary-sphere"
+                    "--package=auxiliary-sphere"
                 ],
                 "filter": {
-                    "name": "auxillary_sphere",
+                    "name": "auxiliary_sphere",
                     "kind": "lib"
                 }
             },
@@ -26,15 +26,15 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'auxillary-sphere'",
+            "name": "Debug executable 'auxiliary-sphere'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=auxillary-sphere",
-                    "--package=auxillary-sphere"
+                    "--bin=auxiliary-sphere",
+                    "--package=auxiliary-sphere"
                 ],
                 "filter": {
-                    "name": "auxillary-sphere",
+                    "name": "auxiliary-sphere",
                     "kind": "bin"
                 }
             },
@@ -44,16 +44,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'auxillary-sphere'",
+            "name": "Debug unit tests in executable 'auxiliary-sphere'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=auxillary-sphere",
-                    "--package=auxillary-sphere"
+                    "--bin=auxiliary-sphere",
+                    "--package=auxiliary-sphere"
                 ],
                 "filter": {
-                    "name": "auxillary-sphere",
+                    "name": "auxiliary-sphere",
                     "kind": "bin"
                 }
             },

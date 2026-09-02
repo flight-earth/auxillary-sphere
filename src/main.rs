@@ -1,8 +1,8 @@
-use auxillary_sphere::geodesy::haversines::{distance, inverse};
-use auxillary_sphere::geodesy::latlng::LatLng;
-use auxillary_sphere::geodesy::problems::InverseProblem;
-use auxillary_sphere::geodesy::published::vincenty1975::vincenty_units;
-use auxillary_sphere::units::DMS;
+use auxiliary_sphere::geodesy::haversines::{distance, inverse};
+use auxiliary_sphere::geodesy::latlng::LatLng;
+use auxiliary_sphere::geodesy::problems::InverseProblem;
+use auxiliary_sphere::geodesy::published::vincenty1975::vincenty_units;
+use auxiliary_sphere::units::DMS;
 
 fn main() {
     let london = LatLng::new(51.5007, -0.1246);

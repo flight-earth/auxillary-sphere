@@ -1,4 +1,4 @@
-# Auxillary Sphere
+# Auxiliary Sphere
 
 Geodesy problems and their solutions.
 

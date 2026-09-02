@@ -140,7 +140,7 @@ impl DMS {
     /// Convert from degrees to DMS
     ///
     /// ```
-    /// # use auxillary_sphere::units::*;
+    /// # use auxiliary_sphere::units::*;
     /// assert_eq!(format!("{}",
     ///   DMS::from_deg(Deg(-169.06666666622118))),
     ///   "-169°3'59.99999839625161\"");
@@ -264,7 +264,7 @@ impl DMS {
 /// Normalize DMS to the degree equivalent of `0 <= deg < 360`.
 ///
 /// ```
-/// # use auxillary_sphere::units::*;
+/// # use auxiliary_sphere::units::*;
 /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: -1, sec: 0.0 }.normalize()), "359°59'0\"");
 /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: 0, sec: 61.0 }.normalize()), "0°1'1\"");
 /// assert_eq!(format!("{:.0}", DMS { deg: 0, min: 61, sec: 0.0 }.normalize()), "1°0'60\"");
@@ -272,14 +272,14 @@ impl DMS {
 ///
 /// Display doesn't round up `0'59.9"` to `1'0"`.
 /// ```
-/// # use auxillary_sphere::units::*;
+/// # use auxiliary_sphere::units::*;
 /// assert_eq!(format!("{:.0}", DMS { deg: 1, min: 0, sec: 59.9 }.normalize()), "1°0'60\"");
 /// assert_eq!(format!("{:.0}", DMS { deg: 1, min: 0, sec: 60.0 }.normalize()), "1°0'60\"");
 /// ```
 ///
 /// Positive normalized.
 /// ```
-/// # use auxillary_sphere::units::*;
+/// # use auxiliary_sphere::units::*;
 /// assert_eq!(format!("{:.0}, {0:?}", DMS::from_deg(Deg(1.0/60.0)).normalize()),
 ///  "0°1'0\", DMS { deg: 0, min: 1, sec: 0.0 }");
 /// assert_eq!(format!("{:.0}, {0:?}", DMS::from_deg(Deg(1.0/3600.0)).normalize()),
@@ -288,7 +288,7 @@ impl DMS {
 ///
 /// Negative not normalized.
 /// ```
-/// # use auxillary_sphere::units::*;
+/// # use auxiliary_sphere::units::*;
 /// assert_eq!(format!("{:.0}, {0:?}", DMS::from_deg(Deg(-1.0/60.0))),
 ///  "-0°1'0\", DMS { deg: 0, min: -1, sec: 0.0 }");
 /// assert_eq!(format!("{:.0}, {0:?}", DMS::from_deg(Deg(-1.0/3600.0))),
@@ -297,7 +297,7 @@ impl DMS {
 ///
 /// Negative normalized.
 /// ```
-/// # use auxillary_sphere::units::*;
+/// # use auxiliary_sphere::units::*;
 /// assert_eq!(format!("{:.0}", DMS::from_deg(Deg(-1.0/60.0).normalize())), "359°59'0\"");
 /// assert_eq!(format!("{:.0}", DMS::from_deg(Deg(-1.0/60.0)).normalize()), "359°59'0\"");
 /// assert_eq!(format!("{:.0}", DMS::from_deg(Deg(-1.0/3600.0).normalize())), "359°59'59\"");
@@ -327,7 +327,7 @@ impl Angle for DMS {
 /// Normalize degree so that `0 <= deg < 360`.
 ///
 /// ```
-/// # use auxillary_sphere::units::*;
+/// # use auxiliary_sphere::units::*;
 /// assert_eq!(format!("{:.0}", Deg(0.0).normalize()), "0°");
 /// assert_eq!(format!("{:.0}", Deg(1.0).normalize()), "1°");
 /// assert_eq!(format!("{:.0}", Deg(-1.0).normalize()), "359°");
@@ -338,7 +338,7 @@ impl Angle for DMS {
 /// ```
 ///
 /// ```
-/// # use auxillary_sphere::units::*;
+/// # use auxiliary_sphere::units::*;
 /// assert_eq!(format!("{:.4}", Deg(1.0/60.0).normalize()), "0.0167°");
 /// assert_eq!(format!("{:.4}", Deg(-1.0/60.0).normalize()), "359.9833°");
 /// ```
